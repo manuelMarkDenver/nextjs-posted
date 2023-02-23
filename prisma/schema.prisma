@@ -18,7 +18,7 @@ model Post {
   published Boolean   @default(false)
   userId    String
   user      User      @relation(fields: [userId], references: [id])
-  Comment   Comment[]
+  comment   Comment[]
 }
 
 model Comment {
@@ -41,7 +41,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   post          Post[]
-  Comment       Comment[]
+  comment       Comment[]
 }
 
 model Account {

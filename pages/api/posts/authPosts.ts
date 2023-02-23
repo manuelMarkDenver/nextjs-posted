@@ -8,30 +8,29 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method === "POST") {
+  if (req.method === "GET") {
     const session = await getServerSession(req, res, authOptions);
     if (!session) return res.status(401).json({ error: "Not authenticated" });
 
-    const title: string = req.body.title;
-    const prismaUser = await prisma.user.findUnique({
-      where: { email: session?.user?.email },
-    });
-
-    //Check title
-    if (title.length > 300)
-      return res.status(403).json({ error: "Title is too long" });
-    if (!title.length)
-      return res.status(403).json({ error: "Title is empty" });
-
+    // Get Auth Users Posts
     try {
-      const result = await prisma.post.create({
-        data: {
-          title,
-          userId: prismaUser.id,
+      const data = await prisma.user.findUnique({
+        where: {
+          email: session?.user?.email || "",
+        },
+        include: {
+          posts: {
+            orderBy: {
+              createdAt: "desc",
+            },
+            include: {
+              Comment: true,
+            },
+          },
         },
       });
 
-      return res.status(200).json({ result: result, message: "Post created" });
+      res.status(200).json(data);
     } catch (error: any) {
       console.error(error.message);
       return res.status(403).json({ error: error.message });

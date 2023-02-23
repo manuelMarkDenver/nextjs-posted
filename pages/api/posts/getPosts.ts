@@ -9,14 +9,16 @@ export default async function handler(
     try {
       const data = await prisma.post.findMany({
         include: {
-         user: true,
-         Comment: true
+          user: true,
+          comment: true,
         },
         orderBy: {
           createdAt: "desc",
         },
       });
-      return res.status(200).json({ result: data, message: "Post created" });
+      return res
+        .status(200)
+        .json({ result: data, message: "Data successfully fetched." });
     } catch (error: any) {
       console.error(error.message);
       return res.status(403).json({ error: "error fetching posts" });

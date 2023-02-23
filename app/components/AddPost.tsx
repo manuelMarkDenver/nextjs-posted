@@ -8,7 +8,8 @@ import toast from "react-hot-toast";
 const AddPost = () => {
   const [title, setTitle] = useState("");
   const [isDisabled, setIsDisabled] = useState(false);
-  let toastPostID: string
+  const queryClient = useQueryClient();
+  let toastPostID: string;
 
   //Create a post
   const { mutate } = useMutation(
@@ -21,8 +22,9 @@ const AddPost = () => {
         setIsDisabled(false);
       },
       onSuccess: (data) => {
-        toast.success('Post has been made 🔥', { id: toastPostID })
+        toast.success("Post has been made 🔥", { id: toastPostID });
         setTitle("");
+        queryClient.invalidateQueries(["posts"]);
         setIsDisabled(false);
         console.log(data);
       },
@@ -31,7 +33,7 @@ const AddPost = () => {
 
   const submitPost = async (e: React.FormEvent) => {
     e.preventDefault();
-    toastPostID = toast.loading('Creating post...');
+    toastPostID = toast.loading("Creating post...");
     setIsDisabled(true);
     await mutate(title);
   };

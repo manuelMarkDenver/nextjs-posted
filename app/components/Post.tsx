@@ -1,7 +1,8 @@
 "use client";
-import { AnyTxtRecord } from "dns";
 import Image from "next/image";
 import Link from "next/link";
+// import { PostType } from "@/app/Types/Posts";
+
 
 import React from "react";
 
@@ -10,9 +11,11 @@ interface PostType {
   name: string;
   image: string;
   title: string;
+  comments: string[];
 }
 
-const Post: React.FC<PostType> = ({ id, name, image, title }) => {
+const Post = ({ id, name, image, title, comments}: PostType) => {
+  console.log("🚀 ~ file: Post.tsx:18 ~ Post ~ comments", comments)
   return (
     <div className="bg-white my-8 p-8 rounded-lg">
       <div className="flex items-center gap-2">
@@ -30,7 +33,9 @@ const Post: React.FC<PostType> = ({ id, name, image, title }) => {
       </div>
       <div className="flex gap-4 cursor-pointer items-center">
         <Link href={`/post/${id}`}>
-          <p className="text-sm font-bold text-gray-700">Comments</p>
+          <p className="text-sm font-bold text-gray-700">
+            {comments?.length} Comments
+          </p>
         </Link>
       </div>
     </div>
